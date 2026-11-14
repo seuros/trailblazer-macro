@@ -44,7 +44,8 @@ module Trailblazer
         end
 
         class YieldAdapter
-          def self.call(task, lib_ctx, flow_options, signal, **circuit_options)
+          # User handlers keep the keyword interface.
+          def self.call(task, lib_ctx, flow_options, signal, circuit_options)
             block = lib_ctx.fetch(:block_for_yield)
 
             task.(lib_ctx, flow_options, signal, **circuit_options, &block)
@@ -53,8 +54,8 @@ module Trailblazer
 
         class Node
           class BlockForYield < Circuit::Node
-            def call(lib_ctx, flow_options, signal, **circuit_options) # DISCUSS: can we not do that at compile-time, somehow?
-              block_for_yield = ->(*args, **kws) { super(*args, **kws) } # this is where the magic's happening. {super} will invoke the {block_activity}.
+            def call(lib_ctx, flow_options, signal, circuit_options) # DISCUSS: can we not do that at compile-time, somehow?
+              block_for_yield = ->(*args, **kws) { super(*args, kws) } # this is where the magic's happening. {super} will invoke the {block_activity}.
 
               return lib_ctx.merge(block_for_yield: block_for_yield), flow_options, signal
             end

@@ -46,10 +46,9 @@ module Trailblazer
 
       class Dynamic
         class Node# < Circuit::Node
-          def call(lib_ctx, flow_options, decision, **circuit_options)
-            # super(lib_ctx, flow_options, nil, **circuit_options, node: decision)
+          def call(lib_ctx, flow_options, decision, circuit_options)
             node = Circuit::Node[decision, Circuit::Processor]
-            node.(lib_ctx, flow_options, nil, **circuit_options) # FIXME: maybe we can find another way, this is tedious.
+            node.(lib_ctx, flow_options, nil, circuit_options) # FIXME: maybe we can find another way, this is tedious.
           end
         end
       end
